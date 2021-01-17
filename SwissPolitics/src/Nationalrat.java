@@ -1,5 +1,5 @@
 import java.util.*;
-public class Nationalrat extends Ratsmitglied{
+public class Nationalrat extends Politician{
 
 	public Nationalrat(String first, String last, String gender, String canton, Date join,
 			Date birth) {

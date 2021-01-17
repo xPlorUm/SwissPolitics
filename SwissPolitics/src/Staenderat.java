@@ -1,5 +1,5 @@
 import java.util.*;
-public class Staenderat extends Ratsmitglied{
+public class Staenderat extends Politician{
 	
 	public Staenderat(String first, String last, String gender, String canton, Date join,
 			Date birth) {

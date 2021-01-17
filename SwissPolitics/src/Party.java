@@ -1,28 +1,33 @@
 import java.util.*;
 public class Party {
 	String name;
-	ArrayList<Ratsmitglied> members;
+	List<Politician> members;
 	
 	public Party(String name) {
 		this.name = name;
+		members = new ArrayList<>();
 	}
 	
-	public void addMember(Ratsmitglied member) {
+	public void addMember(Politician member) {
 		members.add(member);
 	}
 	
-	public void removeMember(Ratsmitglied member) {
-		for(Ratsmitglied i : members) {
+	public void removeMember(Politician member) {
+		for(Politician i : members) {
 			if(member.equals(i)) {
 				members.remove(i);
 				return;
 			}
 		}
-		throw new IllegalArgumentException("Dieses Ratsmitglied ist nicht in dieser Partei.");
+		throw new IllegalArgumentException("Dieser Politiker ist nicht in dieser Partei.");
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public int getSize() {
+		return members.size();
 	}
 	
 	@Override

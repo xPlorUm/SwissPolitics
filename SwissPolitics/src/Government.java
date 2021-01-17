@@ -3,8 +3,8 @@ public class Government {
 	Bundesrat[] bundesraete;
 	Nationalrat[] nationalraete;
 	Staenderat[] staenderaete;
-	Map<Ratsmitglied, Party> raete;
-	//List<Party> parties;
+	Map<Politician, Party> raete;
+	List<Party> parties;
 	
 	public static int BR_SITZE = 7;
 	public static int NR_SITZE = 200;
@@ -17,14 +17,14 @@ public class Government {
 		staenderaete = new Staenderat[SR_SITZE];
 		
 		raete = new HashMap<>();
+		parties = new ArrayList<>();
 	}
 	
-	public void addRat(String first, String last, String g, String canton, Date dateJoin, Date dateBirth, String amt, String str_party) {
-		Ratsmitglied[] arr;
-		Ratsmitglied neu;
-		Party party = null;
+	public void addPolitician(String first, String last, String g, String canton, Date dateJoin, Date dateBirth, String amt, String str_party) {
+		Politician[] arr;
+		Politician neu;
 		//if already added to list then do nothing
-		for(Ratsmitglied i : raete.keySet()) {
+		for(Politician i : raete.keySet()) {
 			if(i.getFirstName().equals(first) && i.getLastName().equals(last)) {
 				return;
 			}
@@ -44,16 +44,8 @@ public class Government {
 			throw new IllegalArgumentException("Falsches Amt ausgewählt");
 		}
 		
-		for(Party i : raete.values()) {
-			if(i.getName().equals(str_party)) {
-				party = i;
-			}
-		}
-		if(party == null) {
-			party = new Party(str_party);
-		}
-		raete.put(neu, party);
-				
+		addParty(str_party, neu);
+
 		//Ratsmitglied takes place in their Council
 		for(int i=0; i<arr.length; i++) {
 			if(arr[i] == null) {
@@ -63,6 +55,49 @@ public class Government {
 		}
 		throw new IllegalArgumentException(neu.toString() + "hat keinen Platz mehr, alles bereits besetzt.");
 	}
+	
+	public void addParty(String str_party, Politician member) {
+		Party party = null;
+		for(Party i : raete.values()) {
+			if(i.getName().equals(str_party)) {
+				party = i;
+			}
+		}
+		
+		if(party == null) {
+			party = new Party(str_party);
+			parties.add(party);
+		}
+		
+		member.setParty(party);
+		party.addMember(member);
+		raete.put(member, party);
+	}
+	
+	public String getPercOfPartiesIn(Politician[] arr){
+		HashMap<Party, Double> result = new HashMap<>();
+		for(Politician i : arr) {
+			Party party = i.getParty();
+			if(!result.containsKey(party)) {
+				result.put(i.getParty(), 0.0);
+			}
+			result.put(party, result.get(party)+1.0);
+		}
+		return formatMap(result, arr.length);
+	}
+	
+	public String formatMap(Map<Party, Double> map, int size) {
+		for(Party i : map.keySet()) {
+			Double value = (double) Math.round(map.get(i)*100.0 / size);
+			map.put(i, value);
+		}
+		return map.toString();
+	}
+	
+	
+	
+	
+	
 /*	
 	public void deleteRat(Ratsmitglied member) {
 		Ratsmitglied[] arr;
